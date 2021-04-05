@@ -12,55 +12,55 @@
 
 class View {
 
-    public:
-        View(const int & _width, const int & _length);
-        ~View();
+	public:
+		View(const int & _width, const int & _length);
+		~View();
 
-        void init();
+		void init();
 
-        void clear_renderer();
-        void present();
+		void clear_renderer();
+		void present();
 
-        /* draw rectangle outline */
-        void display_rectangle_outline(Position pos, int length, int width, SDL_Color color);
+		/* draw rectangle outline */
+		void display_rectangle_outline(Position pos, int length, int width, SDL_Color color);
 
-        /* draw filled rectangle */
-        void display_filled_rectangle(Position pos, int length, int width, SDL_Color color);
+		/* draw filled rectangle */
+		void display_filled_rectangle(Position pos, int length, int width, SDL_Color color);
 
-        /* write text to the window */
-        void display_text_on_window(string str_text, Position pos, SDL_Color color);
+		/* write text to the window */
+		void display_text_on_window(string str_text, Position pos, SDL_Color color);
 
-        void display_brick_on_window(Position pos);
+		void display_brick_on_window(Position pos);
 
-        void update_environment(int score, const vector< vector<int> > & static_positions, const Block & block);
+		void update_environment(int score, const vector< vector<int> > & static_positions, const Block & block);
 
-        void display_init_screen(Uint32 current_time);
+		void display_init_screen(Uint32 current_time);
 
-        void display_end_screen();
-
-
-        /* intro screen animation */
-        Uint32 intro_screen_prev_time;
-        Uint8 intro_text_opacity;
-        bool intro_opacity_increasing;
+		void display_end_screen();
 
 
-    private:
-        
-        SDL_Renderer *  _renderer;
-        SDL_Window *    _window;
-        TTF_Font *      _font;
-        SDL_Texture *   _brick;
+		/* intro screen animation */
+		Uint32 intro_screen_prev_time;
+		Uint8 intro_text_opacity;
+		bool intro_opacity_increasing;
 
-        int _width;
-        int _length;
 
-        SDL_Color get_color_from_type(const BlockType & type);
+	private:
 
-        vector<Position> get_current_position(const BlockType & _type, const int & rotation);
+		SDL_Renderer *  _renderer;
+		SDL_Window *    _window;
+		TTF_Font *      _font;
+		SDL_Texture *   _brick;
 
-        void display_current_moving_block(const Block & block);
+		int _width;
+		int _length;
 
-        void display_blocks_and_board(const std::vector< std::vector<int> > & static_positions);
+		SDL_Color get_color_from_type(const BlockType & type);
+
+		vector<Position> get_current_position(const BlockType & _type, const int & rotation);
+
+		void display_current_moving_block(const Block & block);
+
+		void display_blocks_and_board(const std::vector< std::vector<int> > & static_positions);
 
 };

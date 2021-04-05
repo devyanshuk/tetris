@@ -2,24 +2,24 @@
 #include <iostream>
 
 View::View(const int & _width, const int & _length):
-	intro_screen_prev_time(0),
-	intro_text_opacity(255),
-	intro_opacity_increasing(false)
+intro_screen_prev_time(0),
+intro_text_opacity(255),
+intro_opacity_increasing(false)
 {
-    /* initialize sdl */
-    CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
+	/* initialize sdl */
+	CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
 
-    /* initialize window and renderer */
-    SDL_CreateWindowAndRenderer(_width, _length, SDL_WINDOW_OPENGL | SDL_RENDERER_PRESENTVSYNC, &_window, &_renderer);
-    CHECK_ERROR(_window == NULL, SDL_GetError());
-    CHECK_ERROR(_renderer == NULL, SDL_GetError());
+	/* initialize window and renderer */
+	SDL_CreateWindowAndRenderer(_width, _length, SDL_WINDOW_OPENGL | SDL_RENDERER_PRESENTVSYNC, &_window, &_renderer);
+	CHECK_ERROR(_window == NULL, SDL_GetError());
+	CHECK_ERROR(_renderer == NULL, SDL_GetError());
 
-    SDL_SetWindowTitle(_window, WINDOW_TITLE);
+	SDL_SetWindowTitle(_window, WINDOW_TITLE);
 
-    /* initialize font */
-    CHECK_ERROR(TTF_Init() == -1, TTF_GetError());
-    _font = TTF_OpenFont(FONT_LOCATION, FONT_SIZE);
-    CHECK_ERROR(_font == NULL, TTF_GetError());
+	/* initialize font */
+	CHECK_ERROR(TTF_Init() == -1, TTF_GetError());
+	_font = TTF_OpenFont(FONT_LOCATION, FONT_SIZE);
+	CHECK_ERROR(_font == NULL, TTF_GetError());
 
 	/* initialize image texture */
 	CHECK_ERROR(IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0, IMG_GetError());
@@ -27,25 +27,25 @@ View::View(const int & _width, const int & _length):
 	SDL_Surface * image = IMG_Load(WALL_IMAGE_LOCATION);
 	CHECK_ERROR(image == NULL, IMG_GetError());
 
-    _brick = SDL_CreateTextureFromSurface(_renderer, image);
+	_brick = SDL_CreateTextureFromSurface(_renderer, image);
 	CHECK_ERROR(_brick == NULL, IMG_GetError());
-    SDL_FreeSurface(image);
+	SDL_FreeSurface(image);
 
 	this->_width = _width;
 	this->_length = _length;
 }
 
-View::~View() 
+View::~View()
 {
 	std::cout << "View destructor called" << std::endl;
-    SDL_DestroyRenderer(_renderer);
-    SDL_DestroyWindow(_window);
+	SDL_DestroyRenderer(_renderer);
+	SDL_DestroyWindow(_window);
 	SDL_DestroyTexture(_brick);
-    TTF_CloseFont(_font);
+	TTF_CloseFont(_font);
 
 	IMG_Quit();
-    TTF_Quit();
-    SDL_Quit();
+	TTF_Quit();
+	SDL_Quit();
 }
 
 void View::init() {
@@ -57,22 +57,22 @@ void View::init() {
 
 SDL_Color View::get_color_from_type(const BlockType & _type) {
 	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_COLOR :
-		   _type == BLOCKTYPE_J ? BLOCKTYPE_J_COLOR :
-		   _type == BLOCKTYPE_L ? BLOCKTYPE_L_COLOR :
-		   _type == BLOCKTYPE_O ? BLOCKTYPE_O_COLOR :
-		   _type == BLOCKTYPE_S ? BLOCKTYPE_S_COLOR :
-		   _type == BLOCKTYPE_T ? BLOCKTYPE_T_COLOR :
-		   BLOCKTYPE_Z_COLOR;
+	_type == BLOCKTYPE_J ? BLOCKTYPE_J_COLOR :
+	_type == BLOCKTYPE_L ? BLOCKTYPE_L_COLOR :
+	_type == BLOCKTYPE_O ? BLOCKTYPE_O_COLOR :
+	_type == BLOCKTYPE_S ? BLOCKTYPE_S_COLOR :
+	_type == BLOCKTYPE_T ? BLOCKTYPE_T_COLOR :
+	BLOCKTYPE_Z_COLOR;
 }
 
 vector<Position> View::get_current_position(const BlockType & _type, const int & rotation) {
 	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_POSITIONS[rotation] :
-		   _type == BLOCKTYPE_J ? BLOCKTYPE_J_POSITIONS[rotation] :
-		   _type == BLOCKTYPE_L ? BLOCKTYPE_L_POSITIONS[rotation] :
-		   _type == BLOCKTYPE_O ? BLOCKTYPE_O_POSITIONS[rotation] :
-		   _type == BLOCKTYPE_S ? BLOCKTYPE_S_POSITIONS[rotation] :
-		   _type == BLOCKTYPE_T ? BLOCKTYPE_T_POSITIONS[rotation] :
-		   BLOCKTYPE_Z_POSITIONS[rotation];
+	_type == BLOCKTYPE_J ? BLOCKTYPE_J_POSITIONS[rotation] :
+	_type == BLOCKTYPE_L ? BLOCKTYPE_L_POSITIONS[rotation] :
+	_type == BLOCKTYPE_O ? BLOCKTYPE_O_POSITIONS[rotation] :
+	_type == BLOCKTYPE_S ? BLOCKTYPE_S_POSITIONS[rotation] :
+	_type == BLOCKTYPE_T ? BLOCKTYPE_T_POSITIONS[rotation] :
+	BLOCKTYPE_Z_POSITIONS[rotation];
 }
 
 void View::display_brick_on_window(Position pos) {
@@ -90,8 +90,8 @@ void View::display_init_screen(Uint32 current_time) {
 		intro_screen_prev_time = current_time;
 		intro_text_opacity += intro_opacity_increasing ? 1 : -1;
 		intro_opacity_increasing = (intro_text_opacity >= 255) ? false :
-								   (intro_text_opacity <= 50) ? true :
-								   intro_opacity_increasing;
+		(intro_text_opacity <= 50) ? true :
+		intro_opacity_increasing;
 	}
 
 	SDL_Color init_screen_color = { .r = INIT_SCREEN_COLOR.r, .g = INIT_SCREEN_COLOR.g, .b = INIT_SCREEN_COLOR.b, .a = intro_text_opacity };
@@ -173,7 +173,7 @@ void View::display_rectangle_outline(Position pos, int length, int width, SDL_Co
 {
 	SDL_SetRenderDrawBlendMode( _renderer, SDL_BLENDMODE_BLEND );
 	SDL_SetRenderDrawColor( _renderer, color.r, color.g, color.b, color.a );
-    SDL_Rect destination = { .x = pos.x, .y = pos.y, .w = width, .h = length };
+	SDL_Rect destination = { .x = pos.x, .y = pos.y, .w = width, .h = length };
 	SDL_RenderDrawRect( _renderer, &destination );
 }
 
@@ -188,7 +188,7 @@ void View::display_filled_rectangle(Position pos, int length, int width, SDL_Col
 void View::display_text_on_window(string str_text, Position pos, SDL_Color color)
 {
 	const char * text = str_text.c_str();
-
+	
 	SDL_Surface* surface = TTF_RenderText_Blended(_font, text, color);
 	CHECK_ERROR(surface == NULL, SDL_GetError());
 
@@ -204,9 +204,9 @@ void View::display_text_on_window(string str_text, Position pos, SDL_Color color
 }
 
 void View::clear_renderer() {
-    SDL_RenderClear(_renderer);
+	SDL_RenderClear(_renderer);
 }
 
 void View::present() {
-    SDL_RenderPresent(_renderer);
+	SDL_RenderPresent(_renderer);
 }

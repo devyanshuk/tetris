@@ -5,9 +5,9 @@
 
 class Block {
 
-    public:
-        Position pos;
-        BlockType block_type;
-        int rotation;
-
+public:
+	Position pos;
+	BlockType block_type;
+	int rotation;
+	
 };

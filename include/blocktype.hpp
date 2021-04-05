@@ -5,13 +5,11 @@
 
 class TetrisBlock {
 
-    public:
-        TetrisBlock();
-        ~TetrisBlock();
+	public:
+		TetrisBlock();
+		~TetrisBlock();
 
-        BlockType block;
-        Position pos;
-
-    private:
+		BlockType block;
+		Position pos;
 
 };

@@ -5,8 +5,8 @@
 #include "constants.hpp"
 
 struct ArgInput {
-    int _length = LENGTH;
-    int _width = WIDTH;
+	int _length = LENGTH;
+	int _width = WIDTH;
 };
 
 void print_help(char * program_name);

@@ -37,13 +37,13 @@ inline const Position INIT_TEXT_POS = { .x = 130, .y = 350 };
 
 /* block types */
 enum BlockType {
-    BLOCKTYPE_I = 0,
-    BLOCKTYPE_J = 1,
-    BLOCKTYPE_L = 2,
-    BLOCKTYPE_O = 3,
-    BLOCKTYPE_S = 4,
-    BLOCKTYPE_T = 5,
-    BLOCKTYPE_Z = 6,
+	BLOCKTYPE_I = 0,
+	BLOCKTYPE_J = 1,
+	BLOCKTYPE_L = 2,
+	BLOCKTYPE_O = 3,
+	BLOCKTYPE_S = 4,
+	BLOCKTYPE_T = 5,
+	BLOCKTYPE_Z = 6,
 };
 inline const int NUM_BLOCKTYPES = 7;
 
@@ -87,39 +87,46 @@ inline const Uint32 BLOCK_UPDATE_SPEED = 60;
 
 
 /* all positions of blocks */
-inline const std::vector< std::vector<Position> > BLOCKTYPE_I_POSITIONS = { { { 0, 1 }, { 1, 1 }, { 2, 1 }, { 3, 1 } },
-                                                                  { { 2, 0 }, { 2, 1 }, { 2, 2 }, { 2, 3 } },
-                                                                  { { 0, 2 }, { 1, 2 }, { 2, 2 }, { 3, 2 } },
-                                                                  { { 1, 0 }, { 1, 1 }, { 1, 2 }, { 1, 3 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_I_POSITIONS =
+												{ { { 0, 1 }, { 1, 1 }, { 2, 1 }, { 3, 1 } },
+												{ { 2, 0 }, { 2, 1 }, { 2, 2 }, { 2, 3 } },
+												{ { 0, 2 }, { 1, 2 }, { 2, 2 }, { 3, 2 } },
+												{ { 1, 0 }, { 1, 1 }, { 1, 2 }, { 1, 3 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_J_POSITIONS = { { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
-                                                                  { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 1, 2 } },
-                                                                  { { 0, 1 }, { 1, 1 }, { 2, 1 }, { 2, 2 } },
-                                                                  { { 1, 0 }, { 1, 1 }, { 0, 2 }, { 1, 2 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_J_POSITIONS =
+												{ { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 2, 0 }, { 1, 1 }, { 1, 2 } },
+												{ { 0, 1 }, { 1, 1 }, { 2, 1 }, { 2, 2 } },
+												{ { 1, 0 }, { 1, 1 }, { 0, 2 }, { 1, 2 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_L_POSITIONS = { { { 2, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
-                                                                 { { 1, 0 }, { 1, 1 }, { 1, 2 }, { 2, 2 } },
-                                                                 { { 0, 1 }, { 1, 1 }, { 2, 1 }, { 0, 2 } },
-                                                                 { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 1, 2 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_L_POSITIONS =
+												{ { { 2, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 1, 1 }, { 1, 2 }, { 2, 2 } },
+												{ { 0, 1 }, { 1, 1 }, { 2, 1 }, { 0, 2 } },
+												{ { 0, 0 }, { 1, 0 }, { 1, 1 }, { 1, 2 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_O_POSITIONS = { { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
-                                                                 { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
-                                                                 { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
-                                                                 { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_O_POSITIONS =
+												{ { { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 2, 0 }, { 1, 1 }, { 2, 1 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_S_POSITIONS = { { { 1, 0 }, { 2, 0 }, { 0, 1 }, { 1, 1 } },
-                                                                 { { 1, 0 }, { 1, 1 }, { 2, 1 }, { 2, 2 } },
-                                                                 { { 1, 1 }, { 2, 1 }, { 0, 2 }, { 1, 2 } },
-                                                                 { { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 2 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_S_POSITIONS =
+												{ { { 1, 0 }, { 2, 0 }, { 0, 1 }, { 1, 1 } },
+												{ { 1, 0 }, { 1, 1 }, { 2, 1 }, { 2, 2 } },
+												{ { 1, 1 }, { 2, 1 }, { 0, 2 }, { 1, 2 } },
+												{ { 0, 0 }, { 0, 1 }, { 1, 1 }, { 1, 2 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_T_POSITIONS = { { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
-                                                                  { { 1, 0 }, { 1, 1 }, { 2, 1 }, { 1, 2 } },
-                                                                  { { 0, 1 }, { 1, 1 }, { 2, 1 }, { 1, 2 } },
-                                                                  { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 1, 2 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_T_POSITIONS = 
+												{ { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 2, 1 } },
+												{ { 1, 0 }, { 1, 1 }, { 2, 1 }, { 1, 2 } },
+												{ { 0, 1 }, { 1, 1 }, { 2, 1 }, { 1, 2 } },
+												{ { 1, 0 }, { 0, 1 }, { 1, 1 }, { 1, 2 } } };
 
-inline const std::vector< std::vector<Position> > BLOCKTYPE_Z_POSITIONS = { { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 2, 1 } },
-                                                                  { { 2, 0 }, { 1, 1 }, { 2, 1 },  { 1, 2 } },
-                                                                  { { 0, 1 }, { 1, 1 }, { 1, 2 }, { 2, 2 } },
-                                                                  { { 1, 0 }, { 0, 1 }, { 1, 1 }, { 0, 2 } } };
+inline const std::vector< std::vector<Position> > BLOCKTYPE_Z_POSITIONS =
+												{ { { 0, 0 }, { 1, 0 }, { 1, 1 }, { 2, 1 } },
+												{ { 2, 0 }, { 1, 1 }, { 2, 1 },  { 1, 2 } },
+												{ { 0, 1 }, { 1, 1 }, { 1, 2 }, { 2, 2 } },
+												{ { 1, 0 }, { 0, 1 }, { 1, 1 }, { 0, 2 } } };
 
 #endif
