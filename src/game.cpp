@@ -11,11 +11,11 @@ _block_update_speed(BLOCK_UPDATE_SPEED)
 	/* seed the pseudo random number generator */
 	srand((unsigned int)time(NULL));
 	_prev_time = SDL_GetTicks();
-	_view = new View(input._width, input._length);
+	_view = std::make_unique<View>(input._width, input._length);
 }
 
 Tetris::~Tetris() {
-	delete _view;
+	std::cout << "game destructed" << std::endl;
 }
 
 int Tetris::init() {

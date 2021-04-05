@@ -7,6 +7,7 @@
 #include "errormacros.h"
 
 #include <SDL2/SDL.h>
+#include <memory>
 #include <time.h>
 #include <stdlib.h>
 #include <vector>
@@ -34,8 +35,8 @@ class Tetris {
 
 	private:
 
+		std::unique_ptr<View> _view;
 		int         _score;
-		View *      _view;
 		GameStates  _state;
 		Block       _current_active_block;
 		Uint32      _block_update_speed;
