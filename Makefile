@@ -1,4 +1,4 @@
-OUTPUT_PATH = dev
+OUTPUT_PATH = .
 GAME_NAME = tetris
 
 SDIR = src
