@@ -28,6 +28,13 @@ inline const int BLOCK_HEIGHT = 36;
 inline const int BOARD_OFFSET_X = 280;
 inline const int BOARD_OFFSET_Y = BLOCK_HEIGHT;
 
+/* display positions */
+inline const Position ORIGIN = { .x = 0, .y = 0 };
+inline const Position SCORE_DISPLAY_POS = { .x = 4, .y = 200 };
+inline const Position END_TEXT_POS = { .x = 130, .y = 350 };
+inline const Position INIT_TEXT_POS = { .x = 130, .y = 350 };
+
+
 /* block types */
 enum BlockType {
     BLOCKTYPE_I = 0,

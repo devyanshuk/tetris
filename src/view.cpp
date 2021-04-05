@@ -10,7 +10,7 @@ View::View(const int & _width, const int & _length):
     CHECK_ERROR(SDL_Init(SDL_INIT_VIDEO) != 0, SDL_GetError());
 
     /* initialize window and renderer */
-    SDL_CreateWindowAndRenderer(_width, _length, SDL_WINDOW_OPENGL | SDL_RENDERER_PRESENTVSYNC, &this->_window, &this->_renderer);
+    SDL_CreateWindowAndRenderer(_width, _length, SDL_WINDOW_OPENGL | SDL_RENDERER_PRESENTVSYNC, &_window, &_renderer);
     CHECK_ERROR(_window == NULL, SDL_GetError());
     CHECK_ERROR(_renderer == NULL, SDL_GetError());
 
@@ -18,7 +18,7 @@ View::View(const int & _width, const int & _length):
 
     /* initialize font */
     CHECK_ERROR(TTF_Init() == -1, TTF_GetError());
-    this->_font = TTF_OpenFont(FONT_LOCATION, FONT_SIZE);
+    _font = TTF_OpenFont(FONT_LOCATION, FONT_SIZE);
     CHECK_ERROR(_font == NULL, TTF_GetError());
 
 	/* initialize image texture */
@@ -27,7 +27,7 @@ View::View(const int & _width, const int & _length):
 	SDL_Surface * image = IMG_Load(WALL_IMAGE_LOCATION);
 	CHECK_ERROR(image == NULL, IMG_GetError());
 
-    this->_brick = SDL_CreateTextureFromSurface(this->_renderer, image);
+    _brick = SDL_CreateTextureFromSurface(_renderer, image);
 	CHECK_ERROR(_brick == NULL, IMG_GetError());
     SDL_FreeSurface(image);
 
@@ -38,10 +38,10 @@ View::View(const int & _width, const int & _length):
 View::~View() 
 {
 	std::cout << "View destructor called" << std::endl;
-    SDL_DestroyRenderer(this->_renderer);
-    SDL_DestroyWindow(this->_window);
-	SDL_DestroyTexture(this->_brick);
-    TTF_CloseFont(this->_font);
+    SDL_DestroyRenderer(_renderer);
+    SDL_DestroyWindow(_window);
+	SDL_DestroyTexture(_brick);
+    TTF_CloseFont(_font);
 
 	IMG_Quit();
     TTF_Quit();
@@ -75,15 +75,15 @@ vector<Position> View::get_current_position(const BlockType & _type, const int &
 		   BLOCKTYPE_Z_POSITIONS[rotation];
 }
 
-void View::display_brick_on_window(const int & xpos, const int & ypos) {
-	SDL_Rect destination = { xpos, ypos, BLOCK_WIDTH, BLOCK_HEIGHT };
-	SDL_RenderCopy(this->_renderer, this->_brick, NULL, &destination);
+void View::display_brick_on_window(Position pos) {
+	SDL_Rect destination = { pos.x, pos.y, BLOCK_WIDTH, BLOCK_HEIGHT };
+	SDL_RenderCopy(_renderer, _brick, NULL, &destination);
 }
 
-void View::display_init_screen(const Uint32 & current_time) {
+void View::display_init_screen(Uint32 current_time) {
 
 	/* background */
-	this->display_filled_rectangle( 0, 0, this->_length, this->_width, BACKGROUND_COLOR );
+	display_filled_rectangle( ORIGIN, _length, _width, BACKGROUND_COLOR );
 
 
 	if (current_time > intro_screen_prev_time + 2) {
@@ -97,7 +97,7 @@ void View::display_init_screen(const Uint32 & current_time) {
 	SDL_Color init_screen_color = { .r = INIT_SCREEN_COLOR.r, .g = INIT_SCREEN_COLOR.g, .b = INIT_SCREEN_COLOR.b, .a = intro_text_opacity };
 
 	/* init screen text */
-	this->display_text_on_window("Press spacebar to continue", 130, 350, init_screen_color);
+	display_text_on_window("Press spacebar to continue", INIT_TEXT_POS, init_screen_color);
 }
 
 void View::display_current_moving_block(const Block & block) {
@@ -107,39 +107,24 @@ void View::display_current_moving_block(const Block & block) {
 	for (size_t i = 0; i < display_pos.size(); i++) {
 		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block.pos.x + display_pos[i].x);
 		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block.pos.y + display_pos[i].y);
-		this->display_filled_rectangle( curr_x, curr_y, BLOCK_WIDTH, BLOCK_HEIGHT, color );
-		this->display_rectangle_outline( curr_x, curr_y, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+		Position curr_pos = { curr_x, curr_y };
+
+		display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, color );
+		display_rectangle_outline( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
 	}
 }
 
-
-void View::display_end_screen() {
-
-	/* background */
-	this->display_filled_rectangle( 0, 0, LENGTH, WIDTH, BACKGROUND_COLOR );
-
-	/* init screen text */
-	this->display_text_on_window("Game over. Press spacebar to play again", 130, 350, INIT_SCREEN_COLOR);
-}
-
-void View::update_environment(const int & score, const vector< vector<int> > & static_positions, const Block & block) {
-
-	/* background */
-	this->display_filled_rectangle( 0, 0, this->_length, this->_width, BACKGROUND_COLOR );
-
-	/* score */
-	this->display_text_on_window( "SCORE : " + std::to_string(score), 4, 200, SCORE_COLOR );
-
-	/* blocks and board */
+void View::display_blocks_and_board(const vector< vector<int> > & static_positions) {
 	for (int i = -1; i <= TOTAL_BLOCK_LENGTH; i++) {
 		int curr_y = BOARD_OFFSET_Y + i * BLOCK_HEIGHT;
 
 		for (int j = -1; j <= TOTAL_BLOCK_WIDTH; j++) {
 			int curr_x = BOARD_OFFSET_X + j * BLOCK_WIDTH;
+			Position curr_pos = { .x = curr_x, .y = curr_y };
 
 			/* display outer walls */
 			if (i == -1 || i == TOTAL_BLOCK_LENGTH || j == -1 || j == TOTAL_BLOCK_WIDTH) {
-				this->display_brick_on_window( curr_x, curr_y );
+				display_brick_on_window(curr_pos);
 			}
 
 			/* display inner area */
@@ -151,34 +136,56 @@ void View::update_environment(const int & score, const vector< vector<int> > & s
 					color = get_color_from_type(static_cast<BlockType>(static_positions[i][j]));
 				}
 
-				this->display_filled_rectangle( curr_x, curr_y, BLOCK_WIDTH, BLOCK_HEIGHT, color );
-				this->display_rectangle_outline( curr_x, curr_y, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+				display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, color );
+				display_rectangle_outline( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
 			}
 		}
 	}
+}
 
-	this->display_current_moving_block(block);
+
+void View::display_end_screen() {
+
+	/* background */
+	display_filled_rectangle( ORIGIN, LENGTH, WIDTH, BACKGROUND_COLOR );
+
+	/* init screen text */
+	display_text_on_window("Game over. Press spacebar to play again", END_TEXT_POS, INIT_SCREEN_COLOR);
+}
+
+void View::update_environment(int score, const vector< vector<int> > & static_positions, const Block & block) {
+
+	/* background */
+	display_filled_rectangle( ORIGIN , _length, _width, BACKGROUND_COLOR );
+
+	/* score */
+	display_text_on_window( "SCORE : " + std::to_string(score), SCORE_DISPLAY_POS, SCORE_COLOR );
+
+	/* blocks and board */
+	display_blocks_and_board(static_positions);
+
+	display_current_moving_block(block);
 
 }
 
 
-void View::display_rectangle_outline(const int & xpos, const int & ypos, const int & length, const int & width, const SDL_Color & color)
+void View::display_rectangle_outline(Position pos, int length, int width, SDL_Color color)
 {
-	SDL_SetRenderDrawBlendMode( this->_renderer, SDL_BLENDMODE_BLEND );
-	SDL_SetRenderDrawColor( this->_renderer, color.r, color.g, color.b, color.a );
-    SDL_Rect rectangle = { .x = xpos, .y = ypos, .w = width, .h = length };
-	SDL_RenderDrawRect( this->_renderer, &rectangle );
+	SDL_SetRenderDrawBlendMode( _renderer, SDL_BLENDMODE_BLEND );
+	SDL_SetRenderDrawColor( _renderer, color.r, color.g, color.b, color.a );
+    SDL_Rect destination = { .x = pos.x, .y = pos.y, .w = width, .h = length };
+	SDL_RenderDrawRect( _renderer, &destination );
 }
 
-void View::display_filled_rectangle(const int & xpos, const int & ypos, const int & length, const int & width, const SDL_Color & color)
+void View::display_filled_rectangle(Position pos, int length, int width, SDL_Color color)
 {
-	SDL_SetRenderDrawBlendMode(this->_renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(this->_renderer, color.r, color.g, color.b, color.a );
-	SDL_Rect destination = { .x = xpos, .y = ypos, .w = width, .h = length };
-	SDL_RenderFillRect(this->_renderer, &destination);
+	SDL_SetRenderDrawBlendMode(_renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a );
+	SDL_Rect destination = { .x = pos.x, .y = pos.y, .w = width, .h = length };
+	SDL_RenderFillRect(_renderer, &destination);
 }
 
-void View::display_text_on_window(const string & str_text, const int & xpos, const int & ypos, const SDL_Color & color)
+void View::display_text_on_window(string str_text, Position pos, SDL_Color color)
 {
 	const char * text = str_text.c_str();
 
@@ -190,16 +197,16 @@ void View::display_text_on_window(const string & str_text, const int & xpos, con
 
 	int length, width;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &length);
-	SDL_Rect destination = { .x = xpos, .y = ypos, .w = width, .h = length };
-	SDL_RenderCopy(this->_renderer, texture, nullptr, &destination);
+	SDL_Rect destination = { .x = pos.x, .y = pos.y, .w = width, .h = length };
+	SDL_RenderCopy(_renderer, texture, nullptr, &destination);
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(surface);
 }
 
 void View::clear_renderer() {
-    SDL_RenderClear(this->_renderer);
+    SDL_RenderClear(_renderer);
 }
 
 void View::present() {
-    SDL_RenderPresent(this->_renderer);
+    SDL_RenderPresent(_renderer);
 }

@@ -1,3 +1,4 @@
 tetris
 .DS_STORE
 obj/
+.vscode/

@@ -1,6 +1,3 @@
-#include <getopt.h>
-#include <iostream>
-
 #include "../include/arghelper.hpp"
 
 using namespace std;
@@ -14,7 +11,7 @@ void print_help(char * program_name) {
 }
 
 /* returns false if help message was printed out in console */
-bool read_args(Tetris & game, int argc, char ** argv) {
+bool read_args(ArgInput & input, int argc, char ** argv) {
     
     int ch;
     int index;
@@ -35,10 +32,10 @@ bool read_args(Tetris & game, int argc, char ** argv) {
                 return false;
                 break;
             case 'w':
-                game.set_width(atoi(optarg));
+                input._width = atoi(optarg);
                 break;
             case 'l':
-                game.set_length(atoi(optarg));
+                input._length = atoi(optarg);
                 break;
         }
     }

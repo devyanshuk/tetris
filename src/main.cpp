@@ -1,16 +1,15 @@
-#include <iostream>
-
-
 #include "../include/arghelper.hpp"
 #include "../include/game.hpp"
 
 int main(int argc, char ** argv) {
-    Tetris game;
+
+    ArgInput input;
 
     /* if help mesage wasn't printed to console, start the game */
-    if (read_args(game, argc, argv)) {
-        game.init_view();
-        game.play();
+    if (!read_args(input, argc, argv)) {
+        return 0;
     }
-    return 0;
+
+    Tetris game(input);
+    return game.play();
 }

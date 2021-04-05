@@ -1,8 +1,9 @@
 #pragma once
 
 #include "view.hpp"
-#include "constants.hpp"
 #include "block.hpp"
+#include "constants.hpp"
+#include "arghelper.hpp"
 #include "errormacros.h"
 
 #include <SDL2/SDL.h>
@@ -21,13 +22,10 @@ class Tetris {
 
     public:
 
-        Tetris();
+        Tetris(ArgInput input);
         ~Tetris();
         int         init();
-        void        play();
-        void        set_length(int _length);
-        void        set_width(int _width);
-        int         get_score();
+        int        play();
         void        update_game(const Uint32 & delta_time);
 
         /* sets all values of _static_blocks to -1 indicating free space */
@@ -36,8 +34,6 @@ class Tetris {
 
     private:
 
-        int         _width;
-        int         _length;
         int         _score;
         View *      _view;
         GameStates  _state;
