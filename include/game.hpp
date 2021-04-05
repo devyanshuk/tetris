@@ -26,9 +26,9 @@ class Tetris {
 		Tetris(ArgInput input);
 		~Tetris();
 
-        /* forbid copy constructor */
-        Tetris& operator = (Tetris const &) = delete; 
-        
+		/* forbid copy constructor */
+		Tetris& operator = (Tetris const &) = delete;
+
 		int         init();
 		int         play();
 		void        update_game(const Uint32 & delta_time);
