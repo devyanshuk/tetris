@@ -16,6 +16,9 @@ class View {
 		View(const int & _width, const int & _length);
 		~View();
 
+        /* forbid copy constructor */
+        View& operator = (View const &) = delete; 
+
 		void init();
 
 		void clear_renderer();

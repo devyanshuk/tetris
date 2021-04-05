@@ -3,3 +3,6 @@ tetris
 obj/
 .vscode/
 *.dSYM/
+*.png
+*.jpg
+*.ttf
