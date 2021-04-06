@@ -103,15 +103,15 @@ int Tetris::play() {
 				switch(key) {
 
 					case SDLK_ESCAPE:
-					game_running = false;
-					break;
+						game_running = false;
+						break;
 
 					case SDLK_p:
-					game_pause = true;
-					break;
+						game_pause = !game_pause;
+						break;
 
 					default:
-					game_pause = false;
+						game_pause = false;
 				}
 			}
 		}
