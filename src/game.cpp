@@ -121,5 +121,5 @@ int Tetris::play() {
 			_view->present();
 		}
 	}
-	return true;
+	return 0;
 }
