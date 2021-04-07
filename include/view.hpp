@@ -19,10 +19,10 @@ class View {
 		/* forbid copy constructor */
 		View& operator = (View const &) = delete;
 
-		void init();
+		void init_animation_fields();
 
 		void clear_renderer();
-		void present();
+		void present_renderer();
 
 		/* draw rectangle outline */
 		void display_rectangle_outline(Position pos, int length, int width, SDL_Color color);
@@ -57,6 +57,8 @@ class View {
 
 		int _width;
 		int _length;
+
+		void display_block(Position pos, SDL_Color color);
 
 		SDL_Color get_color_from_type(const BlockType & type);
 

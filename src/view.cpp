@@ -48,31 +48,11 @@ View::~View()
 	SDL_Quit();
 }
 
-void View::init() {
+void View::init_animation_fields() {
 	/* initialize intro screen animation helpers */
 	intro_screen_prev_time = SDL_GetTicks();
 	intro_text_opacity = 255;
 	intro_opacity_increasing = false;
-}
-
-SDL_Color View::get_color_from_type(const BlockType & _type) {
-	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_COLOR :
-	_type == BLOCKTYPE_J ? BLOCKTYPE_J_COLOR :
-	_type == BLOCKTYPE_L ? BLOCKTYPE_L_COLOR :
-	_type == BLOCKTYPE_O ? BLOCKTYPE_O_COLOR :
-	_type == BLOCKTYPE_S ? BLOCKTYPE_S_COLOR :
-	_type == BLOCKTYPE_T ? BLOCKTYPE_T_COLOR :
-	BLOCKTYPE_Z_COLOR;
-}
-
-vector<Position> View::get_current_position(const BlockType & _type, const int & rotation) {
-	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_POSITIONS[rotation] :
-	_type == BLOCKTYPE_J ? BLOCKTYPE_J_POSITIONS[rotation] :
-	_type == BLOCKTYPE_L ? BLOCKTYPE_L_POSITIONS[rotation] :
-	_type == BLOCKTYPE_O ? BLOCKTYPE_O_POSITIONS[rotation] :
-	_type == BLOCKTYPE_S ? BLOCKTYPE_S_POSITIONS[rotation] :
-	_type == BLOCKTYPE_T ? BLOCKTYPE_T_POSITIONS[rotation] :
-	BLOCKTYPE_Z_POSITIONS[rotation];
 }
 
 void View::display_brick_on_window(Position pos) {
@@ -100,17 +80,22 @@ void View::display_init_screen(Uint32 current_time) {
 	display_text_on_window("Press spacebar to continue", INIT_TEXT_POS, init_screen_color);
 }
 
+void View::display_block(Position pos, SDL_Color color) {
+	Position inner_square = { .x = pos.x + 5, .y = pos.y + 5 };
+	display_filled_rectangle( pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+	display_filled_rectangle( inner_square, BLOCK_WIDTH - 10, BLOCK_HEIGHT - 10, color );
+}
+
 void View::display_current_moving_block(const Block & block) {
-	std::vector<Position> display_pos = get_current_position(block.block_type, block.rotation);
-	SDL_Color color = get_color_from_type(block.block_type);
+	std::vector<Position> display_pos = Block::get_current_position(block._block_type, block._rotation);
+	SDL_Color color = Block::get_color_from_type(block._block_type);
 
 	for (size_t i = 0; i < display_pos.size(); i++) {
-		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block.pos.x + display_pos[i].x);
-		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block.pos.y + display_pos[i].y);
+		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block._pos.x + display_pos[i].x);
+		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block._pos.y + display_pos[i].y);
 		Position curr_pos = { curr_x, curr_y };
 
-		display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, color );
-		display_rectangle_outline( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+		display_block(curr_pos, color);
 	}
 }
 
@@ -129,15 +114,17 @@ void View::display_blocks_and_board(const vector< vector<int> > & static_positio
 
 			/* display inner area */
 			else {
-				SDL_Color color = BLOCK_COLOR;
+				SDL_Color color = BLOCK_COLOR;   
 
 				/* check if this square contains a part of static block (-1), and if so, use their pre-defined colors */
 				if (static_positions[i][j] != -1) {
-					color = get_color_from_type(static_cast<BlockType>(static_positions[i][j]));
+					color = Block::get_color_from_type(static_cast<BlockType>(static_positions[i][j]));
+					display_block(curr_pos, color);
 				}
-
-				display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, color );
-				display_rectangle_outline( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+				else {
+					display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, color );
+					display_rectangle_outline( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
+				}
 			}
 		}
 	}
@@ -207,6 +194,6 @@ void View::clear_renderer() {
 	SDL_RenderClear(_renderer);
 }
 
-void View::present() {
+void View::present_renderer() {
 	SDL_RenderPresent(_renderer);
 }

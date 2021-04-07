@@ -28,31 +28,35 @@ class Tetris {
 
 		/* forbid copy constructor */
 		Tetris& operator = (Tetris const &) = delete;
+		Tetris& operator =  (Tetris &&) = delete;
+		Tetris(Tetris const &) = delete;
+		Tetris(Tetris &&) = delete;
 
-		int         init();
+		bool        init();
 		int         play();
-		void        update_game(const Uint32 & delta_time);
 
-		/* sets all values of _static_blocks to -1 indicating free space */
-		void        init_static_blocks();
+		/* sets all values of _non_moving_blocks to -1 indicating free space */
+		void        init_non_moving_blocks();
 		void        init_view();
 
 	private:
-
+		/* values 0..7 in _non_moving_blocks represent static blocks of type 0..7 . -1 represents free space */
+		std::vector< std::vector<int> > _non_moving_blocks;
 		std::unique_ptr<View> _view;
+
 		int         _score;
 		GameStates  _state;
 		Block       _current_active_block;
 		Uint32      _block_update_speed;
 		bool        make_new_block();
+		bool		try_moving_piece(Block test_block);
+		void 		check_collision(int new_x_pos, int new_y_pos);
 		Uint32      _prev_time;
-		void        update_screen(const SDL_Keycode & key, const Uint32 & delta_time);
+		bool        update_screen(const SDL_Keycode & key, const Uint32 & delta_time);
 
 		/* */
-		bool        is_intersecting();
-
-		/* values 0..7 in _static_blocks represent static blocks of type 0..7 . -1 represents free space */
-		std::vector< std::vector<int> > _static_blocks;
-		Uint32 get_tick_difference();
+		bool        is_collision(const Block & test_block);
+		Uint32 		get_tick_difference();
+		void        update_game(const SDL_Keycode & key, const Uint32 & delta_time);
 
 };
