@@ -6,11 +6,12 @@ using namespace std;
 Tetris::Tetris(ArgInput input):
 _score(0),
 _state(GAMESTATE_INIT_SCREEN),
-_block_update_speed(BLOCK_UPDATE_SPEED)
+_block_vertical_update_speed(VERTICAL_BLOCK_UPDATE_SPEED)
 {
 	/* seed the pseudo random number generator */
 	srand((unsigned int)time(NULL));
-	_prev_time = SDL_GetTicks();
+	_prev_y_update_time = SDL_GetTicks();
+	_prev_x_update_time = SDL_GetTicks();
 	_view = std::make_unique<View>(input._width, input._length);
 	_view->init_animation_fields();
 }
@@ -83,10 +84,29 @@ void Tetris::check_collision(int new_x_pos, int new_y_pos) {
 	}
 }
 
-void Tetris::update_game(const SDL_Keycode & key, const Uint32 & delta_time) {
-	if (delta_time >= _block_update_speed) {
-		_prev_time = SDL_GetTicks();
+void Tetris::update_game_state(SDL_Keycode key) {
+	if (key == SDLK_SPACE) {
+		if (_state == GAMESTATE_INIT_SCREEN) {
+			_state = GAMESTATE_PLAYING;
+			init();
+		}
+		else if (_state == GAMESTATE_END) {
+			_state = GAMESTATE_INIT_SCREEN;
+			_view->init_animation_fields();
+		}
+	}
+}
 
+void Tetris::update_game(SDL_Keycode & key) {
+	if (_state != GAMESTATE_PLAYING) {
+		_prev_y_update_time = SDL_GetTicks();
+		_prev_x_update_time = SDL_GetTicks();
+		update_game_state(key);
+		return;
+	}
+
+	if (SDL_GetTicks() - _prev_x_update_time >= HORIZONTAL_BLOCK_UPDATE_SPEED) {
+		_prev_x_update_time = SDL_GetTicks();
 		switch(key) {
 
 			case SDLK_LEFT:
@@ -96,7 +116,16 @@ void Tetris::update_game(const SDL_Keycode & key, const Uint32 & delta_time) {
 			case SDLK_RIGHT:
 				check_collision(_current_active_block._pos.x + 1, _current_active_block._pos.y);
 				break;
+
+			default:
+				goto mov_y;
 		}
+		key = SDLK_0;
+	}
+
+mov_y:
+	if (get_tick_difference() >= _block_vertical_update_speed) {
+		_prev_y_update_time = SDL_GetTicks();
 
 		/* move down a block every tick */
 		check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1);
@@ -104,49 +133,35 @@ void Tetris::update_game(const SDL_Keycode & key, const Uint32 & delta_time) {
 	}
 }
 
-bool Tetris::update_screen(const SDL_Keycode & key, const Uint32 & delta_time) {
+bool Tetris::update_screen() {
 	switch (_state) {
 
 		case GAMESTATE_INIT_SCREEN:
-		_view->display_init_screen(SDL_GetTicks());
-		if (key == SDLK_SPACE) {
-			_state = GAMESTATE_PLAYING;
-			if (!init()) {
-				return false;
-			}
-		}
-		break;
+			_view->display_init_screen(SDL_GetTicks());
+			break;
 
 		case GAMESTATE_PLAYING:
-		_view->update_environment(_score, _non_moving_blocks, _current_active_block);
-		update_game(key, delta_time);
-		break;
+			_view->update_environment(_score, _non_moving_blocks, _current_active_block);
+			break;
 
 		case GAMESTATE_END:
-		_view->display_end_screen();
-		if (key == SDLK_SPACE) {
-			_state = GAMESTATE_INIT_SCREEN;
-			_view->init_animation_fields();
-		}
-		break;
+			_view->display_end_screen();
+			break;
 	}
 	return true;
 }
 
 Uint32 Tetris::get_tick_difference() {
-	Uint32 curr_time = SDL_GetTicks();
-	Uint32 delta_time = curr_time - _prev_time;
-	return delta_time;
+	return SDL_GetTicks() - _prev_y_update_time;
 }
 
 int Tetris::play() {
 	SDL_Event event;
 	bool game_running = true;
 	bool game_pause = false;
+	SDL_Keycode key = SDLK_0; /* dummy value */
 
 	while (game_running) {
-		Uint32 delta_time = get_tick_difference();
-		SDL_Keycode key;
 
 		while(SDL_PollEvent(&event)) {
 			if(event.type == SDL_QUIT) {
@@ -166,12 +181,14 @@ int Tetris::play() {
 
 					default:
 						game_pause = false;
+						break;
 				}
 			}
 		}
 		if (!game_pause) {
+			update_game(key);
 			_view->clear_renderer();
-			if (!update_screen(key, delta_time)){
+			if (!update_screen()){
 				break;
 			}
 			_view->present_renderer();
