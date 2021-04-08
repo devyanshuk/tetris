@@ -83,8 +83,8 @@ inline const char * WALL_IMAGE_LOCATION = "brick.png";
 inline const Position BLOCK_STARTING_POSITION = { .x = 4, .y = 0 };
 
 /* block update speed */
-inline const Uint32 VERTICAL_BLOCK_UPDATE_SPEED = 400;
-inline const Uint32 HORIZONTAL_BLOCK_UPDATE_SPEED = 140;
+inline const Uint32 VERTICAL_BLOCK_UPDATE_SPEED = 1000;
+inline const Uint32 HORIZONTAL_BLOCK_UPDATE_SPEED = 120;
 
 
 /* all positions of blocks */

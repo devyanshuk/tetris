@@ -23,11 +23,32 @@ Block & Block::operator=(const Block & other) {
 }
 
 Block::Block(BlockType _block_type, Position _pos, int _rotation):
+    _pos(_pos), 
     _block_type(_block_type),
-    _pos(_pos),
     _rotation(_rotation)
     {
     }
+
+bool Block::is_collision(const Block & test_block, std::vector<std::vector<int> > _non_moving_blocks) {
+	std::vector<Position> pos = get_current_position(test_block._block_type, test_block._rotation);
+	for (size_t i = 0; i < pos.size(); i++) {
+
+		/* translate x and y positions by test block x and y positions */
+		int curr_x = pos[i].x + test_block._pos.x;
+		int curr_y = pos[i].y + test_block._pos.y;
+
+		/* if there already was a block in the grid, return false */
+		if (curr_x < 0 ||
+			curr_x >= TOTAL_BLOCK_WIDTH ||
+			curr_y < 0 ||
+			curr_y >= TOTAL_BLOCK_LENGTH ||
+			_non_moving_blocks[curr_y][curr_x] != -1)
+			{
+				return true;
+			}
+	}
+	return false;
+}
 
 std::vector<Position> Block::get_current_position(const BlockType & _type, const int & rotation) {
 	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_POSITIONS[rotation] :

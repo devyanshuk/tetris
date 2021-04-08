@@ -66,6 +66,8 @@ class View {
 
 		void display_current_moving_block(const Block & block);
 
+		void display_moving_block_final_pos(const Block & test_block, const std::vector< std::vector<int> > & static_positions);
+
 		void display_blocks_and_board(const std::vector< std::vector<int> > & static_positions);
 
 };

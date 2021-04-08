@@ -41,32 +41,11 @@ void Tetris::init_non_moving_blocks() {
 	}
 }
 
-bool Tetris::is_collision(const Block & test_block) {
-	std::vector<Position> all_test_block_positions = Block::get_current_position(test_block._block_type, test_block._rotation);
-	for (size_t i = 0; i < all_test_block_positions.size(); i++) {
-
-		/* translate x and y positions by current block x and y positions */
-		int curr_x = all_test_block_positions[i].x + test_block._pos.x;
-		int curr_y = all_test_block_positions[i].y + test_block._pos.y;
-
-		/* if there already was a block in the grid, return false */
-		if (curr_x < 0 ||
-			curr_x >= TOTAL_BLOCK_WIDTH ||
-			curr_y < 0 ||
-			curr_y >= TOTAL_BLOCK_LENGTH ||
-			_non_moving_blocks[curr_y][curr_x] != -1)
-			{
-				return true;
-			}
-	}
-	return false;
-}
-
 bool Tetris::make_new_block() {
 	int _type = rand() % NUM_BLOCKTYPES;
 	BlockType new_block_type = static_cast<BlockType>(_type);
 	Block check_block(new_block_type);
-	if (is_collision(check_block)) {
+	if (Block::is_collision(check_block, _non_moving_blocks)) {
 		return false;
 	}
 	_current_active_block = check_block;
@@ -74,7 +53,7 @@ bool Tetris::make_new_block() {
 }
 
 bool Tetris::try_moving_piece(Block test_block) {
-	return !is_collision(test_block);
+	return !Block::is_collision(test_block, _non_moving_blocks);
 }
 
 /* returns true if the block became static */
@@ -87,9 +66,9 @@ bool Tetris::check_collision(int new_x_pos, int new_y_pos, int new_rotation) {
 	/* if there is a collision after moving the block vertically, that block will be static */
 	else if (new_y_pos != _current_active_block._pos.y) {
 		std::vector<Position> all_current_block_positions = Block::get_current_position(_current_active_block._block_type, new_rotation);
-		for (size_t i = 0; i < all_current_block_positions.size(); i++) {
-			int x = all_current_block_positions[i].x + _current_active_block._pos.x;
-			int y = all_current_block_positions[i].y + _current_active_block._pos.y;
+		for (const Position & pos : all_current_block_positions ) {
+			int x = pos.x + _current_active_block._pos.x;
+			int y = pos.y + _current_active_block._pos.y;
 
 			_non_moving_blocks[y][x] = _current_active_block._block_type;
 		}
@@ -122,6 +101,7 @@ bool Tetris::update_game(SDL_Keycode & key) {
 	if (SDL_GetTicks() - _prev_x_update_time >= HORIZONTAL_BLOCK_UPDATE_SPEED) {
 		_prev_x_update_time = SDL_GetTicks();
 		size_t active_blocks;
+		Block block;
 		switch(key) {
 
 			case SDLK_LEFT:
@@ -142,6 +122,15 @@ bool Tetris::update_game(SDL_Keycode & key) {
 				check_collision(_current_active_block._pos.x, _current_active_block._pos.y, (_current_active_block._rotation - 1) % active_blocks);
 				break;
 
+			case SDLK_UP:
+				block = _current_active_block;
+				while (try_moving_piece(block)) {
+					block._pos.y++;
+				}
+				block._pos.y--;
+				check_collision(block._pos.x, block._pos.y, block._rotation);
+				break;
+
 			default:
 				goto mov_y;
 		}
@@ -157,6 +146,14 @@ mov_y:
 			return make_new_block();
 		}
 	}
+
+	else if (key == SDLK_DOWN) {
+		if (check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1, _current_active_block._rotation)) {
+			return make_new_block();
+		}
+		key = SDLK_0;
+	}
+
 	return true;
 }
 

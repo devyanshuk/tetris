@@ -80,6 +80,27 @@ void View::display_init_screen(Uint32 current_time) {
 	display_text_on_window("Press spacebar to continue", INIT_TEXT_POS, init_screen_color);
 }
 
+void View::display_moving_block_final_pos(const Block & test_block, const std::vector< std::vector<int> > & static_positions) {
+	Block block = test_block;
+	std::vector<Position> all_pos = Block::get_current_position(block._block_type, block._rotation);
+	SDL_Color color = Block::get_color_from_type(block._block_type);
+	color.a = 170;
+
+	while (!Block::is_collision(block, static_positions)) {
+		block._pos.y++;
+	}
+	block._pos.y--;
+	
+	for (const Position & pos : all_pos) {
+		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block._pos.x + pos.x);
+		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block._pos.y + pos.y);
+		Position curr_pos = { curr_x, curr_y };
+
+		display_filled_rectangle( curr_pos, BLOCK_WIDTH, BLOCK_HEIGHT , color );
+	}
+
+}
+
 void View::display_block(Position pos, SDL_Color color) {
 	Position inner_square = { .x = pos.x + 5, .y = pos.y + 5 };
 	display_filled_rectangle( pos, BLOCK_WIDTH, BLOCK_HEIGHT, BLOCK_OUTLINE_COLOR );
@@ -90,9 +111,9 @@ void View::display_current_moving_block(const Block & block) {
 	std::vector<Position> display_pos = Block::get_current_position(block._block_type, block._rotation);
 	SDL_Color color = Block::get_color_from_type(block._block_type);
 
-	for (size_t i = 0; i < display_pos.size(); i++) {
-		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block._pos.x + display_pos[i].x);
-		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block._pos.y + display_pos[i].y);
+	for (const Position & pos : display_pos) {
+		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block._pos.x + pos.x);
+		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block._pos.y + pos.y);
 		Position curr_pos = { curr_x, curr_y };
 
 		display_block(curr_pos, color);
@@ -150,6 +171,8 @@ void View::update_environment(int score, const vector< vector<int> > & static_po
 
 	/* blocks and board */
 	display_blocks_and_board(static_positions);
+
+	display_moving_block_final_pos(block, static_positions);
 
 	display_current_moving_block(block);
 
