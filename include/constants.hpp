@@ -49,7 +49,7 @@ inline const int NUM_BLOCKTYPES = 7;
 
 
 /* block textures */
-inline SDL_Color BLOCK_COLOR = { 255, 255, 255, 255 };
+inline SDL_Color BLOCK_COLOR = { 0, 0, 0, 255 };
 inline SDL_Color BLOCK_OUTLINE_COLOR = { 0, 0, 0, 255 };
 
 /* block colors */
@@ -84,7 +84,7 @@ inline const Position BLOCK_STARTING_POSITION = { .x = 4, .y = 0 };
 
 /* block update speed */
 inline const Uint32 VERTICAL_BLOCK_UPDATE_SPEED = 1000;
-inline const Uint32 HORIZONTAL_BLOCK_UPDATE_SPEED = 120;
+inline const Uint32 HORIZONTAL_BLOCK_UPDATE_SPEED = 60;
 
 
 /* all positions of blocks */

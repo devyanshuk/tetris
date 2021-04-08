@@ -9,6 +9,8 @@
 #include <SDL2/SDL.h>
 #include <memory>
 #include <time.h>
+#include <optional>
+#include <algorithm>
 #include <stdlib.h>
 #include <vector>
 
@@ -43,6 +45,7 @@ class Tetris {
 		/* values 0..7 in _non_moving_blocks represent static blocks of type 0..7 . -1 represents free space */
 		std::vector< std::vector<int> > _non_moving_blocks;
 		std::unique_ptr<View> _view;
+		std::optional<SDL_Keycode> _key;
 
 		int         _score;
 		GameStates  _state;
@@ -54,11 +57,12 @@ class Tetris {
 		Uint32      _prev_y_update_time;
 		Uint32      _prev_x_update_time;
 		bool        update_screen();
+		void		remove_all_complete_rows();
 
 		/* */
 		bool        is_collision(const Block & test_block);
 		Uint32 		get_tick_difference();
-		bool        update_game(SDL_Keycode & key);
-		void 		update_game_state(SDL_Keycode key);
+		bool        update_game();
+		void 		update_game_state();
 
 };
