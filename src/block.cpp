@@ -22,6 +22,13 @@ Block & Block::operator=(const Block & other) {
     return *this;
 }
 
+Block::Block(BlockType _block_type, Position _pos, int _rotation):
+    _block_type(_block_type),
+    _pos(_pos),
+    _rotation(_rotation)
+    {
+    }
+
 std::vector<Position> Block::get_current_position(const BlockType & _type, const int & rotation) {
 	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_POSITIONS[rotation] :
 	_type == BLOCKTYPE_J ? BLOCKTYPE_J_POSITIONS[rotation] :

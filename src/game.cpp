@@ -78,15 +78,15 @@ bool Tetris::try_moving_piece(Block test_block) {
 }
 
 /* returns true if the block became static */
-bool Tetris::check_collision(int new_x_pos, int new_y_pos) {
+bool Tetris::check_collision(int new_x_pos, int new_y_pos, int new_rotation) {
 	Position possible_new_pos = { .x = new_x_pos, .y = new_y_pos };
-	Block test_block(_current_active_block._block_type, possible_new_pos);
+	Block test_block(_current_active_block._block_type, possible_new_pos, new_rotation);
 	if (try_moving_piece(test_block)) {
 		_current_active_block = test_block;
 	}
 	/* if there is a collision after moving the block vertically, that block will be static */
 	else if (new_y_pos != _current_active_block._pos.y) {
-		std::vector<Position> all_current_block_positions = Block::get_current_position(_current_active_block._block_type, _current_active_block._rotation);
+		std::vector<Position> all_current_block_positions = Block::get_current_position(_current_active_block._block_type, new_rotation);
 		for (size_t i = 0; i < all_current_block_positions.size(); i++) {
 			int x = all_current_block_positions[i].x + _current_active_block._pos.x;
 			int y = all_current_block_positions[i].y + _current_active_block._pos.y;
@@ -121,14 +121,25 @@ bool Tetris::update_game(SDL_Keycode & key) {
 
 	if (SDL_GetTicks() - _prev_x_update_time >= HORIZONTAL_BLOCK_UPDATE_SPEED) {
 		_prev_x_update_time = SDL_GetTicks();
+		size_t active_blocks;
 		switch(key) {
 
 			case SDLK_LEFT:
-				check_collision(_current_active_block._pos.x - 1, _current_active_block._pos.y);
+				check_collision(_current_active_block._pos.x - 1, _current_active_block._pos.y, _current_active_block._rotation);
 				break;
 
 			case SDLK_RIGHT:
-				check_collision(_current_active_block._pos.x + 1, _current_active_block._pos.y);
+				check_collision(_current_active_block._pos.x + 1, _current_active_block._pos.y, _current_active_block._rotation);
+				break;
+
+			case SDLK_x:
+				active_blocks = Block::get_current_position(_current_active_block._block_type, _current_active_block._rotation).size();
+				check_collision(_current_active_block._pos.x, _current_active_block._pos.y, (_current_active_block._rotation + 1) % active_blocks);
+				break;
+
+			case SDLK_z:
+				active_blocks = Block::get_current_position(_current_active_block._block_type, _current_active_block._rotation).size();
+				check_collision(_current_active_block._pos.x, _current_active_block._pos.y, (_current_active_block._rotation - 1) % active_blocks);
 				break;
 
 			default:
@@ -142,7 +153,7 @@ mov_y:
 		_prev_y_update_time = SDL_GetTicks();
 
 		/* move down a block every tick */
-		if (check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1)) {
+		if (check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1, _current_active_block._rotation)) {
 			return make_new_block();
 		}
 	}

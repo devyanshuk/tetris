@@ -16,6 +16,7 @@ class Block {
 
 		Block(BlockType block_type);
 		Block(BlockType block_type, Position pos);
+		Block(BlockType block_type, Position pos, int _rotation);
 		Block();
 
 		Block & operator = (const Block & other);

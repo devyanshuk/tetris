@@ -50,7 +50,7 @@ class Tetris {
 		Uint32      _block_vertical_update_speed;
 		bool        make_new_block();
 		bool		try_moving_piece(Block test_block);
-		bool		check_collision(int new_x_pos, int new_y_pos);
+		bool		check_collision(int new_x_pos, int new_y_pos, int new_rotation);
 		Uint32      _prev_y_update_time;
 		Uint32      _prev_x_update_time;
 		bool        update_screen();
