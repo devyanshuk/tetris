@@ -50,7 +50,7 @@ class Tetris {
 		Uint32      _block_vertical_update_speed;
 		bool        make_new_block();
 		bool		try_moving_piece(Block test_block);
-		void 		check_collision(int new_x_pos, int new_y_pos);
+		bool		check_collision(int new_x_pos, int new_y_pos);
 		Uint32      _prev_y_update_time;
 		Uint32      _prev_x_update_time;
 		bool        update_screen();
@@ -58,7 +58,7 @@ class Tetris {
 		/* */
 		bool        is_collision(const Block & test_block);
 		Uint32 		get_tick_difference();
-		void        update_game(SDL_Keycode & key);
+		bool        update_game(SDL_Keycode & key);
 		void 		update_game_state(SDL_Keycode key);
 
 };

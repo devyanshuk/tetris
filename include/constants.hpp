@@ -31,7 +31,7 @@ inline const int BOARD_OFFSET_Y = BLOCK_HEIGHT;
 /* display positions */
 inline const Position ORIGIN = { .x = 0, .y = 0 };
 inline const Position SCORE_DISPLAY_POS = { .x = 4, .y = 200 };
-inline const Position END_TEXT_POS = { .x = 130, .y = 350 };
+inline const Position END_TEXT_POS = { .x = 20, .y = 350 };
 inline const Position INIT_TEXT_POS = { .x = 130, .y = 350 };
 
 
@@ -83,7 +83,7 @@ inline const char * WALL_IMAGE_LOCATION = "brick.png";
 inline const Position BLOCK_STARTING_POSITION = { .x = 4, .y = 0 };
 
 /* block update speed */
-inline const Uint32 VERTICAL_BLOCK_UPDATE_SPEED = 400;
+inline const Uint32 VERTICAL_BLOCK_UPDATE_SPEED = 100;
 inline const Uint32 HORIZONTAL_BLOCK_UPDATE_SPEED = 140;
 
 

@@ -23,6 +23,7 @@ Tetris::~Tetris() {
 bool Tetris::init() {
 	_score = 0;
 	_view->init_animation_fields();
+	_non_moving_blocks.clear();
 	init_non_moving_blocks();
 	if (!make_new_block()) {
 		return false;
@@ -76,12 +77,25 @@ bool Tetris::try_moving_piece(Block test_block) {
 	return !is_collision(test_block);
 }
 
-void Tetris::check_collision(int new_x_pos, int new_y_pos) {
+/* returns true if the block became static */
+bool Tetris::check_collision(int new_x_pos, int new_y_pos) {
 	Position possible_new_pos = { .x = new_x_pos, .y = new_y_pos };
 	Block test_block(_current_active_block._block_type, possible_new_pos);
 	if (try_moving_piece(test_block)) {
 		_current_active_block = test_block;
 	}
+	/* if there is a collision after moving the block vertically, that block will be static */
+	else if (new_y_pos != _current_active_block._pos.y) {
+		std::vector<Position> all_current_block_positions = Block::get_current_position(_current_active_block._block_type, _current_active_block._rotation);
+		for (size_t i = 0; i < all_current_block_positions.size(); i++) {
+			int x = all_current_block_positions[i].x + _current_active_block._pos.x;
+			int y = all_current_block_positions[i].y + _current_active_block._pos.y;
+
+			_non_moving_blocks[y][x] = _current_active_block._block_type;
+		}
+		return true;
+	}
+	return false;
 }
 
 void Tetris::update_game_state(SDL_Keycode key) {
@@ -97,12 +111,12 @@ void Tetris::update_game_state(SDL_Keycode key) {
 	}
 }
 
-void Tetris::update_game(SDL_Keycode & key) {
+bool Tetris::update_game(SDL_Keycode & key) {
 	if (_state != GAMESTATE_PLAYING) {
 		_prev_y_update_time = SDL_GetTicks();
 		_prev_x_update_time = SDL_GetTicks();
 		update_game_state(key);
-		return;
+		return true;
 	}
 
 	if (SDL_GetTicks() - _prev_x_update_time >= HORIZONTAL_BLOCK_UPDATE_SPEED) {
@@ -128,9 +142,11 @@ mov_y:
 		_prev_y_update_time = SDL_GetTicks();
 
 		/* move down a block every tick */
-		check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1);
-
+		if (check_collision(_current_active_block._pos.x, _current_active_block._pos.y + 1)) {
+			return make_new_block();
+		}
 	}
+	return true;
 }
 
 bool Tetris::update_screen() {
@@ -186,7 +202,10 @@ int Tetris::play() {
 			}
 		}
 		if (!game_pause) {
-			update_game(key);
+			if (!update_game(key)) {
+				key = SDLK_0;
+				_state = GAMESTATE_END;
+			}
 			_view->clear_renderer();
 			if (!update_screen()){
 				break;
