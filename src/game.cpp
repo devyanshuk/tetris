@@ -244,6 +244,7 @@ int Tetris::play() {
 				break;
 			}
 			_view->present_renderer();
+			SDL_Delay(1);
 		}
 	}
 	return 0;
