@@ -1,7 +1,7 @@
 #include "../include/view.hpp"
 #include <iostream>
 
-View::View(const int & _width, const int & _length):
+View::View(const int & _width, const int & _length, bool _show_hint):
 intro_screen_prev_time(0),
 intro_text_opacity(255),
 intro_opacity_increasing(false)
@@ -33,11 +33,11 @@ intro_opacity_increasing(false)
 
 	this->_width = _width;
 	this->_length = _length;
+	this->_show_hint = _show_hint;
 }
 
 View::~View()
 {
-	std::cout << "View destructor called" << std::endl;
 	SDL_DestroyRenderer(_renderer);
 	SDL_DestroyWindow(_window);
 	SDL_DestroyTexture(_brick);
@@ -172,7 +172,9 @@ void View::update_environment(int score, const vector< vector<int> > & static_po
 	/* blocks and board */
 	display_blocks_and_board(static_positions);
 
-	display_moving_block_final_pos(block, static_positions);
+	if (_show_hint) {
+		display_moving_block_final_pos(block, static_positions);
+	}
 
 	display_current_moving_block(block);
 

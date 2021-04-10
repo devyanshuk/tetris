@@ -12,7 +12,7 @@ _block_vertical_update_speed(VERTICAL_BLOCK_UPDATE_SPEED)
 	srand((unsigned int)time(NULL));
 	_prev_y_update_time = SDL_GetTicks();
 	_prev_x_update_time = SDL_GetTicks();
-	_view = std::make_unique<View>(input._width, input._length);
+	_view = std::make_unique<View>(input._width, input._length, input._show_hint);
 	_view->init_animation_fields();
 }
 

@@ -13,7 +13,7 @@
 class View {
 
 	public:
-		View(const int & _width, const int & _length);
+		View(const int & _width, const int & _length, bool _show_hint);
 		~View();
 
 		/* forbid copy constructor */
@@ -57,6 +57,7 @@ class View {
 
 		int _width;
 		int _length;
+		bool _show_hint;
 
 		void display_block(Position pos, SDL_Color color);
 
