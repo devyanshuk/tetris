@@ -2,13 +2,13 @@
 
 Block::Block(BlockType _block_type): _pos (BLOCK_STARTING_POSITION), _rotation (0)
 {
-    this->_block_type = _block_type;
+	this->_block_type = _block_type;
 }
 
 Block::Block(BlockType _block_type, Position _pos) : _rotation (0)
 {
-    this->_block_type = _block_type;
-    this->_pos = _pos;
+	this->_block_type = _block_type;
+	this->_pos = _pos;
 }
 
 Block::Block(): _pos (BLOCK_STARTING_POSITION), _rotation (0)
@@ -16,18 +16,18 @@ Block::Block(): _pos (BLOCK_STARTING_POSITION), _rotation (0)
 }
 
 Block & Block::operator=(const Block & other) {
-    this->_rotation = other._rotation;
-    this->_block_type = other._block_type;
-    this->_pos = other._pos;
-    return *this;
+	this->_rotation = other._rotation;
+	this->_block_type = other._block_type;
+	this->_pos = other._pos;
+	return *this;
 }
 
 Block::Block(BlockType _block_type, Position _pos, int _rotation):
-    _pos(_pos), 
-    _block_type(_block_type),
-    _rotation(_rotation)
-    {
-    }
+_pos(_pos),
+_block_type(_block_type),
+_rotation(_rotation)
+{
+}
 
 bool Block::is_collision(const Block & test_block, std::vector<std::vector<int> > _non_moving_blocks) {
 	std::vector<Position> pos = get_current_position(test_block._block_type, test_block._rotation);
@@ -46,9 +46,9 @@ bool Block::is_collision(const Block & test_block, std::vector<std::vector<int> 
 			{
 				return true;
 			}
+		}
+		return false;
 	}
-	return false;
-}
 
 std::vector<Position> Block::get_current_position(const BlockType & _type, const int & rotation) {
 	return _type == BLOCKTYPE_I ? BLOCKTYPE_I_POSITIONS[rotation] :

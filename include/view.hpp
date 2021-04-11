@@ -58,7 +58,7 @@ class View {
 		int _width;
 		int _length;
 		bool _show_hint;
-
+		
 		void display_block(Position pos, SDL_Color color);
 
 		SDL_Color get_color_from_type(const BlockType & type);

@@ -16,10 +16,6 @@ _block_vertical_update_speed(VERTICAL_BLOCK_UPDATE_SPEED)
 	_view->init_animation_fields();
 }
 
-Tetris::~Tetris() {
-	std::cout << "game destructed" << std::endl;
-}
-
 bool Tetris::init() {
 	_score = 0;
 	_view->init_animation_fields();
@@ -33,17 +29,13 @@ bool Tetris::init() {
 
 void Tetris::init_non_moving_blocks() {
 	for (int i = 0; i < TOTAL_BLOCK_LENGTH; i++) {
-		std::vector<int> row;
-		for (int j = 0; j < TOTAL_BLOCK_WIDTH; j++) {
-			row.push_back(-1);
-		}
+		std::vector<int> row(TOTAL_BLOCK_WIDTH, -1);
 		_non_moving_blocks.push_back(row);
 	}
 }
 
 bool Tetris::make_new_block() {
-	int _type = rand() % NUM_BLOCKTYPES;
-	BlockType new_block_type = static_cast<BlockType>(_type);
+	BlockType new_block_type = static_cast<BlockType>(rand() % NUM_BLOCKTYPES);
 	Block check_block(new_block_type);
 	if (Block::is_collision(check_block, _non_moving_blocks)) {
 		return false;
@@ -127,6 +119,7 @@ bool Tetris::update_game() {
 		_prev_x_update_time = SDL_GetTicks();
 		size_t active_blocks;
 		Block block;
+
 		switch(*_key) {
 
 			case SDLK_LEFT:
@@ -160,7 +153,6 @@ bool Tetris::update_game() {
 				check_collision(block._pos.x, block._pos.y, block._rotation);
 				_key = {};
 				break;
-
 		}
 	}
 
@@ -184,6 +176,7 @@ bool Tetris::update_game() {
 }
 
 bool Tetris::update_screen() {
+
 	switch (_state) {
 
 		case GAMESTATE_INIT_SCREEN:

@@ -20,7 +20,7 @@ bool read_args(ArgInput & input, int argc, char ** argv) {
 		{ "width"     ,     required_argument ,  0, 'w' },
 		{ "length"    ,     required_argument ,  0, 'l' },
 		{ "help"      ,     no_argument       ,  0, 'h' },
-		{ "show-hint" , 	required_argument ,  0, 's' },
+		{ "show-hint" ,     required_argument ,  0, 's' },
 		{ 0           ,     0                 ,  0,  0  }
 	};
 

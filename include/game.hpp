@@ -26,7 +26,6 @@ class Tetris {
 	public:
 
 		Tetris(ArgInput input);
-		~Tetris();
 
 		/* forbid copy constructor */
 		Tetris& operator = (Tetris const &) = delete;

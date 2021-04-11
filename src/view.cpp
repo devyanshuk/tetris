@@ -90,7 +90,7 @@ void View::display_moving_block_final_pos(const Block & test_block, const std::v
 		block._pos.y++;
 	}
 	block._pos.y--;
-	
+
 	for (const Position & pos : all_pos) {
 		int curr_x = BOARD_OFFSET_X + BLOCK_WIDTH * (block._pos.x + pos.x);
 		int curr_y = BOARD_OFFSET_Y + BLOCK_HEIGHT * (block._pos.y + pos.y);
@@ -135,7 +135,7 @@ void View::display_blocks_and_board(const vector< vector<int> > & static_positio
 
 			/* display inner area */
 			else {
-				SDL_Color color = BLOCK_COLOR;   
+				SDL_Color color = BLOCK_COLOR;
 
 				/* check if this square contains a part of static block (-1), and if so, use their pre-defined colors */
 				if (static_positions[i][j] != -1) {
@@ -200,7 +200,7 @@ void View::display_filled_rectangle(Position pos, int length, int width, SDL_Col
 void View::display_text_on_window(string str_text, Position pos, SDL_Color color)
 {
 	const char * text = str_text.c_str();
-	
+
 	SDL_Surface* surface = TTF_RenderText_Blended(_font, text, color);
 	CHECK_ERROR(surface == NULL, SDL_GetError());
 
