@@ -29,7 +29,7 @@ bool Tetris::init() {
 
 void Tetris::init_non_moving_blocks() {
 	for (int i = 0; i < TOTAL_BLOCK_LENGTH; i++) {
-		std::vector<int> row(TOTAL_BLOCK_WIDTH, -1);
+		std::vector<std::optional<int> > row(TOTAL_BLOCK_WIDTH, std::nullopt);
 		_non_moving_blocks.push_back(row);
 	}
 }
@@ -52,8 +52,8 @@ void Tetris::remove_all_complete_rows() {
 	int lines_cleared = 0;
 	int clear_from = 0;
 	for (int i = TOTAL_BLOCK_LENGTH - 1; i >= 0; i--) {
-		std::vector<int> current_row = _non_moving_blocks[i];
-		if (std::find(current_row.begin(), current_row.end(), -1) == current_row.end()) {
+		std::vector<std::optional<int>> current_row = _non_moving_blocks[i];
+		if (std::find(current_row.begin(), current_row.end(), std::nullopt) == current_row.end()) {
 			lines_cleared++;
 			if (clear_from < i) {
 				clear_from = i;
@@ -63,8 +63,7 @@ void Tetris::remove_all_complete_rows() {
 	if (lines_cleared == 0) {
 		return;
 	}
-
-	std::vector<int> empty_row(TOTAL_BLOCK_WIDTH, -1);
+	std::vector<std::optional<int> > empty_row(TOTAL_BLOCK_WIDTH, std::nullopt);
 	for (int i = clear_from - lines_cleared; i >= 0; i--) {
 		_non_moving_blocks[i + lines_cleared] = _non_moving_blocks[i];
 	}

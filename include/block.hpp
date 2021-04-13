@@ -4,6 +4,7 @@
 #include "constants.hpp"
 
 #include <vector>
+#include <optional>
 #include <SDL2/SDL.h>
 
 class Block {
@@ -22,5 +23,5 @@ class Block {
 		Block & operator = (const Block & other);
 		static SDL_Color get_color_from_type(const BlockType & _type);
 		static std::vector<Position> get_current_position(const BlockType & _type, const int & rotation);
-		static bool is_collision(const Block & test_block, std::vector<std::vector<int> > _non_moving_blocks);
+		static bool is_collision(const Block & test_block, std::vector<std::vector<std::optional<int> > > _non_moving_blocks);
 };

@@ -29,7 +29,7 @@ _rotation(_rotation)
 {
 }
 
-bool Block::is_collision(const Block & test_block, std::vector<std::vector<int> > _non_moving_blocks) {
+bool Block::is_collision(const Block & test_block, std::vector<std::vector<std::optional<int> > > _non_moving_blocks) {
 	std::vector<Position> pos = get_current_position(test_block._block_type, test_block._rotation);
 	for (size_t i = 0; i < pos.size(); i++) {
 
@@ -42,7 +42,7 @@ bool Block::is_collision(const Block & test_block, std::vector<std::vector<int> 
 			curr_x >= TOTAL_BLOCK_WIDTH ||
 			curr_y < 0 ||
 			curr_y >= TOTAL_BLOCK_LENGTH ||
-			_non_moving_blocks[curr_y][curr_x] != -1)
+			_non_moving_blocks[curr_y][curr_x].has_value())
 			{
 				return true;
 			}

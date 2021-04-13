@@ -80,7 +80,7 @@ void View::display_init_screen(Uint32 current_time) {
 	display_text_on_window("Press spacebar to continue", INIT_TEXT_POS, init_screen_color);
 }
 
-void View::display_moving_block_final_pos(const Block & test_block, const std::vector< std::vector<int> > & static_positions) {
+void View::display_moving_block_final_pos(const Block & test_block, const std::vector< std::vector<std::optional<int> > > & static_positions) {
 	Block block = test_block;
 	std::vector<Position> all_pos = Block::get_current_position(block._block_type, block._rotation);
 	SDL_Color color = Block::get_color_from_type(block._block_type);
@@ -120,7 +120,7 @@ void View::display_current_moving_block(const Block & block) {
 	}
 }
 
-void View::display_blocks_and_board(const vector< vector<int> > & static_positions) {
+void View::display_blocks_and_board(const vector< vector<std::optional<int> > > & static_positions) {
 	for (int i = -1; i <= TOTAL_BLOCK_LENGTH; i++) {
 		int curr_y = BOARD_OFFSET_Y + i * BLOCK_HEIGHT;
 
@@ -137,9 +137,9 @@ void View::display_blocks_and_board(const vector< vector<int> > & static_positio
 			else {
 				SDL_Color color = BLOCK_COLOR;
 
-				/* check if this square contains a part of static block (-1), and if so, use their pre-defined colors */
-				if (static_positions[i][j] != -1) {
-					color = Block::get_color_from_type(static_cast<BlockType>(static_positions[i][j]));
+				/* check if this square contains a part of static block (std::nullopt), and if so, use their pre-defined colors */
+				if (static_positions[i][j].has_value()) {
+					color = Block::get_color_from_type(static_cast<BlockType>(*static_positions[i][j]));
 					display_block(curr_pos, color);
 				}
 				else {
@@ -161,7 +161,7 @@ void View::display_end_screen() {
 	display_text_on_window("Game over. Press spacebar to play again", END_TEXT_POS, INIT_SCREEN_COLOR);
 }
 
-void View::update_environment(int score, const vector< vector<int> > & static_positions, const Block & block) {
+void View::update_environment(int score, const vector< vector<std::optional<int> > > & static_positions, const Block & block) {
 
 	/* background */
 	display_filled_rectangle( ORIGIN , _length, _width, BACKGROUND_COLOR );

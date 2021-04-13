@@ -42,7 +42,7 @@ class Tetris {
 
 	private:
 		/* values 0..7 in _non_moving_blocks represent static blocks of type 0..7 . -1 represents free space */
-		std::vector< std::vector<int> > _non_moving_blocks;
+		std::vector< std::vector<std::optional<int> > > _non_moving_blocks;
 		std::unique_ptr<View>           _view;
 		std::optional<SDL_Keycode>      _key;
 
