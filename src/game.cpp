@@ -48,26 +48,37 @@ bool Tetris::try_moving_piece(Block test_block) {
 	return !Block::is_collision(test_block, _non_moving_blocks);
 }
 
+using namespace std;
 void Tetris::remove_all_complete_rows() {
 	int lines_cleared = 0;
-	int clear_from = 0;
-	for (int i = TOTAL_BLOCK_LENGTH - 1; i >= 0; i--) {
-		std::vector<std::optional<int>> current_row = _non_moving_blocks[i];
-		if (std::find(current_row.begin(), current_row.end(), std::nullopt) == current_row.end()) {
+	int count = 0;
+	std::vector<std::vector<std::optional<int> > > new_non_moving_blocks;
+	//new_non_moving_blocks.resize(TOTAL_BLOCK_LENGTH);
+	std::vector<std::optional<int>> empty_row(TOTAL_BLOCK_WIDTH, std::nullopt);
+	for (int a = TOTAL_BLOCK_LENGTH - 1; a >= 0; a--) {
+		cout << "i = " << a << " lines cleared = " << lines_cleared << endl;
+		if (std::find(_non_moving_blocks[a].begin(), _non_moving_blocks[a].end(), std::nullopt) != _non_moving_blocks[a].end()) {
+			new_non_moving_blocks.push_back(_non_moving_blocks[a]);
+			count++;
+			cout << "here" << "and new i = " << a << endl;
+		}
+		else {
 			lines_cleared++;
-			if (clear_from < i) {
-				clear_from = i;
-			}
 		}
 	}
+	cout << "END OF FOR LOOP" << endl;
 	if (lines_cleared == 0) {
 		return;
 	}
-	std::vector<std::optional<int> > empty_row(TOTAL_BLOCK_WIDTH, std::nullopt);
-	for (int i = clear_from - lines_cleared; i >= 0; i--) {
-		_non_moving_blocks[i + lines_cleared] = _non_moving_blocks[i];
+	cout << "NEW MOVING BLOCK SIZE = " << new_non_moving_blocks.size() << " COUNT = " << count << endl;
+	for (int i = 0; i < lines_cleared; i++) {
+		new_non_moving_blocks.push_back(empty_row);
 	}
-	_non_moving_blocks[0] = empty_row;
+	cout << "TRYING TO ROTATE" << "original size = " <<  _non_moving_blocks.size() << " lines cleared = " << lines_cleared << endl;
+	//std::rotate(new_non_moving_blocks.begin(), new_non_moving_blocks.end() - 1, new_non_moving_blocks.end());
+	cout << "ROTATED" << endl;
+	_non_moving_blocks = new_non_moving_blocks;
+	cout << "GIVEN VALUE" << " new size = " << _non_moving_blocks.size() << endl;
 }
 
 /* returns true if the block became static */
